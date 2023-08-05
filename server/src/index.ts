@@ -8,10 +8,13 @@ import { json } from "body-parser";
 import { port } from "./constants/constants";
 import { UserResolvers } from "./resolvers/user";
 import { UserType } from "./types/user";
+import { AppDataSource } from "./data-source";
 
 export const setupServer = async () => {
   const app = express();
   const httpServer = http.createServer(app);
+
+  await AppDataSource.initialize();
 
   const server = new ApolloServer({
     typeDefs: [UserType],
