@@ -14,7 +14,8 @@ export const setupServer = async () => {
   const app = express();
   const httpServer = http.createServer(app);
 
-  await AppDataSource.initialize();
+  const connection = await AppDataSource.initialize();
+  await connection.runMigrations();
 
   const server = new ApolloServer({
     typeDefs: [UserType],

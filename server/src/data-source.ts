@@ -3,6 +3,7 @@ import { User } from "./entity/User";
 import { Post } from "./entity/Post";
 import { Comment } from "./entity/Comment";
 import "dotenv/config";
+import { SeedData1585400000000 } from "./migration/1585400000000-SeedData";
 
 export const AppDataSource = new DataSource({
   type: "postgres",
@@ -15,5 +16,5 @@ export const AppDataSource = new DataSource({
   logging: process.env.DB_LOGGING === "true",
   entities: [User, Post, Comment],
   subscribers: [],
-  migrations: [],
+  migrations: [SeedData1585400000000],
 });

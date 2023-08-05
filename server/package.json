@@ -20,6 +20,7 @@
   "homepage": "https://github.com/trunov/user-content-hub#readme",
   "dependencies": {
     "@apollo/server": "^4.9.1",
+    "@faker-js/faker": "^8.0.2",
     "@types/jest": "^29.5.3",
     "@types/supertest": "^2.0.12",
     "dotenv": "^16.3.1",
