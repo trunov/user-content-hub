@@ -10,7 +10,7 @@ export class User {
   @Column()
   name: string;
 
-  @Column()
+  @Column({ unique: true })
   email: string;
 
   @OneToMany(() => Post, (post) => post.author)
