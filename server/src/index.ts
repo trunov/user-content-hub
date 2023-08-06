@@ -9,6 +9,9 @@ import { port } from "./constants/constants";
 import { UserResolvers } from "./resolvers/user";
 import { UserType } from "./types/user";
 import { AppDataSource } from "./data-source";
+import { PostType } from "./types/post";
+import { PostResolvers } from "./resolvers/post";
+import { CommentType } from "./types/comment";
 
 export const setupServer = async () => {
   const app = express();
@@ -18,8 +21,8 @@ export const setupServer = async () => {
   await connection.runMigrations();
 
   const server = new ApolloServer({
-    typeDefs: [UserType],
-    resolvers: [UserResolvers],
+    typeDefs: [UserType, PostType, CommentType],
+    resolvers: [UserResolvers, PostResolvers],
     plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
   });
 

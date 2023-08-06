@@ -1,10 +1,10 @@
 export const UserType = `
 type User {
     id: ID!
-    name: String
+    name: String!
+    email: String!
 }
 
 type Query {
-    numberSix: Int! #Should always return 6
-    user(id: ID!): User
+    getAllUsers: [User!]!
 }`;

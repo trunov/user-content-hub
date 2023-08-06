@@ -1,8 +1,11 @@
-const users = [{ id: "1", name: "Kirill" }];
+import { AppDataSource } from "../data-source";
+import { User } from "../entity/User";
 
 export const UserResolvers = {
   Query: {
-    numberSix: () => 6,
-    user: (parent, args) => users.find((user) => user.id === args.id),
+    getAllUsers: async () => {
+      const manager = AppDataSource.createEntityManager();
+      return await manager.find(User);
+    },
   },
 };
