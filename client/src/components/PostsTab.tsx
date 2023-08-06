@@ -1,5 +1,6 @@
 import { useQuery, gql } from "@apollo/client";
 import { useState } from "react";
+import DetailedView from "./DetailedView";
 
 const GET_ALL_POSTS = gql`
   query GetAllPosts($offset: Int, $limit: Int) {
@@ -32,6 +33,7 @@ type Post = {
 
 function PostsTab() {
   const [page, setPage] = useState(1);
+  const [selectedPostId, setSelectedPostId] = useState<number | null>(null);
 
   const { loading, error, data } = useQuery(GET_ALL_POSTS, {
     variables: { offset: (page - 1) * POSTS_PER_PAGE, limit: POSTS_PER_PAGE },
@@ -44,6 +46,15 @@ function PostsTab() {
 
   const totalPages = Math.ceil(data.getAllPosts.totalCount / itemsPerPage);
 
+  if (selectedPostId) {
+    return (
+      <DetailedView
+        postId={selectedPostId}
+        setIsDetailedView={setSelectedPostId}
+      />
+    );
+  }
+
   return (
     <div>
       <table className="min-w-full bg-white">
@@ -55,7 +66,11 @@ function PostsTab() {
         </thead>
         <tbody>
           {data.getAllPosts.items.map((post: Post) => (
-            <tr key={post.id}>
+            <tr
+              key={post.id}
+              className="hover:bg-gray-100 cursor-pointer"
+              onClick={() => setSelectedPostId(post.id)}
+            >
               <td className="py-2 px-4">{post.title}</td>
               <td className="py-2 px-4">{post.author.name}</td>
             </tr>

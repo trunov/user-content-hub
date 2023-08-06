@@ -2,7 +2,7 @@ import { useState } from "react";
 import "./App.css";
 import UsersTab from "./components/UsersTab";
 import PostsTab from "./components/PostsTab";
-import logo from "./gfx/logo512.png"; // Adjust the path if needed
+import logo from "./gfx/logo512.png";
 
 type TabType = "users" | "posts";
 
