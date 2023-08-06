@@ -5,10 +5,15 @@ type Post {
     content: String!
     author: User!
     comments: [Comment!]
-  }
+}
+
+type PostPagination {
+    items: [Post!]!
+    totalCount: Int!
+}
 
 type Query {
-    getAllPosts(offset: Int, limit: Int): [Post!]!
+    getAllPosts(offset: Int, limit: Int): PostPagination!
     getPostById(postId: ID!): Post
 }
 

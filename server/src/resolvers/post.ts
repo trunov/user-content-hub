@@ -12,10 +12,16 @@ export const PostResolvers = {
   Query: {
     getAllPosts: async (_, { offset = 0, limit = 10 }) => {
       const manager = AppDataSource.createEntityManager();
-      return await manager.find(Post, {
+
+      const [items, totalCount] = await manager.findAndCount(Post, {
         skip: offset,
         take: limit,
       });
+
+      return {
+        items,
+        totalCount,
+      };
     },
     getPostById: async (_, { postId }) => {
       const manager = AppDataSource.createEntityManager();
