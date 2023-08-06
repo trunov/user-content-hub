@@ -4,10 +4,17 @@ type Post {
     title: String!
     content: String!
     author: User!
-    comments: [Comment!]!
+    comments: [Comment!]
   }
 
 type Query {
     getAllPosts: [Post!]!
     getPostById(postId: ID!): Post
-}`;
+}
+
+type Mutation {
+    createPost(title: String!, content: String!, authorId: ID!): Post!
+    updatePost(id: ID!, title: String, content: String): Post!
+    deletePost(id: ID!): Boolean
+}
+`;
