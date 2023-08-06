@@ -12,6 +12,7 @@ import { AppDataSource } from "./data-source";
 import { PostType } from "./types/post";
 import { PostResolvers } from "./resolvers/post";
 import { CommentType } from "./types/comment";
+import { CommentResolvers } from "./resolvers/comment";
 
 export const setupServer = async () => {
   const app = express();
@@ -22,7 +23,7 @@ export const setupServer = async () => {
 
   const server = new ApolloServer({
     typeDefs: [UserType, PostType, CommentType],
-    resolvers: [UserResolvers, PostResolvers],
+    resolvers: [UserResolvers, PostResolvers, CommentResolvers],
     plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
   });
 
