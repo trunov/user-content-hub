@@ -8,7 +8,7 @@ type Post {
   }
 
 type Query {
-    getAllPosts: [Post!]!
+    getAllPosts(offset: Int, limit: Int): [Post!]!
     getPostById(postId: ID!): Post
 }
 
