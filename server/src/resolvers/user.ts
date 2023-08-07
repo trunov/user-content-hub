@@ -31,7 +31,7 @@ export const UserResolvers = {
         where: { email: email },
       });
 
-      if (existingUser && existingUser.id !== id) {
+      if (existingUser && existingUser.id !== Number(id)) {
         throw new Error("A user with this email already exists");
       }
 

@@ -1,8 +1,11 @@
 import { useQuery, gql } from "@apollo/client";
+import { useState } from "react";
+import Modal from "./Modal";
 
 interface DetailedViewProps {
   postId: number;
   setIsDetailedView: React.Dispatch<React.SetStateAction<number | null>>;
+  refetchAllPosts: () => void;
 }
 
 type Author = {
@@ -38,8 +41,18 @@ const GET_SINGLE_POST = gql`
   }
 `;
 
-function DetailedView({ postId, setIsDetailedView }: DetailedViewProps) {
-  const { loading, error, data } = useQuery(GET_SINGLE_POST, {
+function DetailedView({
+  postId,
+  setIsDetailedView,
+  refetchAllPosts,
+}: DetailedViewProps) {
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+
+  const handleUpdate = () => {
+    setIsModalOpen(true);
+  };
+
+  const { loading, error, data, refetch } = useQuery(GET_SINGLE_POST, {
     variables: { postId: postId },
   });
 
@@ -50,6 +63,18 @@ function DetailedView({ postId, setIsDetailedView }: DetailedViewProps) {
 
   return (
     <div className="relative bg-white p-6 rounded-lg shadow-lg max-w-2xl mx-auto mt-10">
+      {isModalOpen && (
+        <Modal
+          type="POST"
+          operation={"UPDATE"}
+          defaultData={post} // or provide a defaultData based on the operation type
+          onClose={() => setIsModalOpen(false)}
+          refetch={() => {
+            refetchAllPosts();
+            refetch();
+          }}
+        />
+      )}
       <button
         className="absolute top-2 right-2 text-2xl leading-none p-1 text-gray-700 hover:text-gray-900"
         onClick={() => setIsDetailedView(null)}
@@ -60,6 +85,13 @@ function DetailedView({ postId, setIsDetailedView }: DetailedViewProps) {
       <p className="text-gray-600 mb-4">
         Written by: <span className="font-semibold">{post.author.name}</span>
       </p>
+
+      <button
+        onClick={handleUpdate}
+        className="px-2 py-1 bg-blue-500 text-white rounded mb-4"
+      >
+        Update Post
+      </button>
 
       <div className="mb-8 border-l-4 border-blue-500 pl-4">{post.content}</div>
 

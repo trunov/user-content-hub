@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useQuery, gql, useMutation } from "@apollo/client";
-import UserModal from "./UserModal";
+import Modal from "./Modal";
 
 type User = {
   id: number;
@@ -42,8 +42,9 @@ function UsersTab() {
   return (
     <table className="min-w-full bg-white">
       {isModalOpen && (
-        <UserModal
-          isEdit={!!selectedUser}
+        <Modal
+          type="USER"
+          operation={selectedUser ? "UPDATE" : "CREATE"}
           defaultData={selectedUser}
           onClose={() => setIsModalOpen(false)}
           refetch={refetch}
@@ -53,15 +54,17 @@ function UsersTab() {
         <tr>
           <th className="py-2 px-4 text-left">Name</th>
           <th className="py-2 px-4 text-left">Email</th>
-          <button
-            className="bg-green-500 hover:bg-green-600 text-white py-1 px-4 rounded transition duration-300 ease-in-out ml-4"
-            onClick={() => {
-              setSelectedUser(null);
-              setIsModalOpen(true);
-            }}
-          >
-            Create User
-          </button>
+          <th className="text-left">
+            <button
+              className="bg-green-500 hover:bg-green-600 text-white py-1 px-4 rounded transition duration-300 ease-in-out ml-4"
+              onClick={() => {
+                setSelectedUser(null);
+                setIsModalOpen(true);
+              }}
+            >
+              Create User
+            </button>
+          </th>
         </tr>
       </thead>
       <tbody>
