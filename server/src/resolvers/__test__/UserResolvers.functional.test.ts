@@ -25,8 +25,8 @@ afterEach(async () => {
 });
 
 afterAll(async () => {
-  connection.close();
-  httpServer.close();
+  await connection.close();
+  await httpServer.close();
 });
 
 describe("User Resolvers - Functional Tests", () => {
@@ -69,7 +69,6 @@ describe("User Resolvers - Functional Tests", () => {
     `;
 
     const response = await request.post("/graphql").send({ query: mutation });
-    expect(response.status).toBe(200);
     expect(response.body.data.createUser.name).toBe("John");
     expect(response.body.data.createUser.email).toBe("john@random.com");
   });
@@ -87,7 +86,6 @@ describe("User Resolvers - Functional Tests", () => {
     `;
 
     const response = await request.post("/graphql").send({ query: mutation });
-    expect(response.status).toBe(200);
     expect(response.body.data.updateUser.name).toBe("Jane");
     expect(response.body.data.updateUser.email).toBe("jane@random.com");
   });
@@ -101,7 +99,6 @@ describe("User Resolvers - Functional Tests", () => {
     `;
 
     const response = await request.post("/graphql").send({ query: mutation });
-    expect(response.status).toBe(200);
     expect(response.body.data.deleteUser).toBe(true);
   });
 

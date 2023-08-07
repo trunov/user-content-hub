@@ -26,8 +26,8 @@ afterEach(async () => {
 });
 
 afterAll(async () => {
-  connection.close();
-  httpServer.close();
+  await connection.close();
+  await httpServer.close();
 });
 
 describe("Post Resolvers - Functional Tests", () => {

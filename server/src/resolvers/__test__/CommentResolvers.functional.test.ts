@@ -26,8 +26,8 @@ afterEach(async () => {
 });
 
 afterAll(async () => {
-  connection.close();
-  httpServer.close();
+  await connection.close();
+  await httpServer.close();
 });
 describe("Comment Resolvers - Functional Tests", () => {
   it("should throw an error when trying to add a comment to a non-existent post", async () => {
@@ -48,8 +48,8 @@ describe("Comment Resolvers - Functional Tests", () => {
 
   it("should add a comment to a post successfully", async () => {
     const testUser = await createUser({
-      name: "Test User",
-      email: "test.user@random.com",
+      name: "Sample",
+      email: "test.user.comment@random.com",
     });
     const testPost = await createPost({
       authorId: testUser.id,

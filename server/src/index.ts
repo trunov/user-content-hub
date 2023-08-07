@@ -27,11 +27,8 @@ export const setupServer = async () => {
     plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
   });
 
-  try {
-    await server.start();
-  } catch (error) {
-    console.error("Error starting server:", error);
-  }
+  await server.start();
+
   app.use(
     "/graphql",
     cors<cors.CorsRequest>(),
@@ -51,4 +48,7 @@ export const startServer = async () => {
   console.log(`🚀 Server ready at http://localhost:${port}/graphql`);
 };
 
-startServer();
+// this was needed due to tests, they were running startServer otherwise
+if (require.main === module) {
+  startServer();
+}
