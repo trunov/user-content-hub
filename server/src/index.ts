@@ -6,13 +6,13 @@ import http from "http";
 import cors from "cors";
 import { json } from "body-parser";
 import { port } from "./constants/constants";
-import { UserResolvers } from "./resolvers/user";
+import { UserResolvers } from "./resolvers/UserResolvers";
 import { UserType } from "./types/user";
 import { AppDataSource } from "./data-source";
 import { PostType } from "./types/post";
-import { PostResolvers } from "./resolvers/post";
+import { PostResolvers } from "./resolvers/PostResolvers";
 import { CommentType } from "./types/comment";
-import { CommentResolvers } from "./resolvers/comment";
+import { CommentResolvers } from "./resolvers/CommentResolvers";
 
 export const setupServer = async () => {
   const app = express();
@@ -27,8 +27,11 @@ export const setupServer = async () => {
     plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
   });
 
-  await server.start();
-
+  try {
+    await server.start();
+  } catch (error) {
+    console.error("Error starting server:", error);
+  }
   app.use(
     "/graphql",
     cors<cors.CorsRequest>(),
@@ -36,11 +39,11 @@ export const setupServer = async () => {
     expressMiddleware(server)
   );
 
-  return httpServer;
+  return { httpServer, connection };
 };
 
 export const startServer = async () => {
-  const httpServer = await setupServer();
+  const { httpServer } = await setupServer();
 
   await new Promise<void>((resolve) =>
     httpServer.listen({ port: port }, resolve)
