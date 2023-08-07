@@ -3,6 +3,7 @@ import { useMutation, gql } from "@apollo/client";
 
 type DataProps = {
   id?: number;
+  authorId?: number;
   name?: string;
   email?: string;
   title?: string;

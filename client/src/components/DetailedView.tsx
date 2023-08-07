@@ -1,4 +1,4 @@
-import { useQuery, gql } from "@apollo/client";
+import { useQuery, gql, useMutation } from "@apollo/client";
 import { useState } from "react";
 import Modal from "./Modal";
 
@@ -41,12 +41,29 @@ const GET_SINGLE_POST = gql`
   }
 `;
 
+const ADD_COMMENT = gql`
+  mutation AddComment($postId: ID!, $content: String!, $authorId: ID!) {
+    addComment(postId: $postId, content: $content, authorId: $authorId) {
+      id
+      content
+      author {
+        id
+        name
+      }
+    }
+  }
+`;
+
 function DetailedView({
   postId,
   setIsDetailedView,
   refetchAllPosts,
 }: DetailedViewProps) {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [commentContent, setCommentContent] = useState<string>("");
+
+  const [addComment, { loading: mutationLoading, error: mutationError }] =
+    useMutation(ADD_COMMENT);
 
   const handleUpdate = () => {
     setIsModalOpen(true);
@@ -61,13 +78,27 @@ function DetailedView({
 
   const post = data.getPostById;
 
+  const handleCommentSubmit = () => {
+    // We are using 'authorId' of the person who wrote post, in future there should be authorization
+    addComment({
+      variables: {
+        postId: post.id,
+        content: commentContent,
+        authorId: post.author.id,
+      },
+    }).then(() => {
+      setCommentContent("");
+      refetch();
+    });
+  };
+
   return (
     <div className="relative bg-white p-6 rounded-lg shadow-lg max-w-2xl mx-auto mt-10">
       {isModalOpen && (
         <Modal
           type="POST"
           operation={"UPDATE"}
-          defaultData={post} // or provide a defaultData based on the operation type
+          defaultData={post}
           onClose={() => setIsModalOpen(false)}
           refetch={() => {
             refetchAllPosts();
@@ -111,10 +142,19 @@ function DetailedView({
         <textarea
           className="w-full p-2 rounded-md border border-gray-300 mb-4"
           placeholder="Add a comment..."
+          value={commentContent}
+          onChange={(e) => setCommentContent(e.target.value)}
         ></textarea>
-        <button className="bg-blue-500 hover:bg-blue-600 text-white rounded-md px-4 py-2">
-          Post Comment
+        <button
+          className="bg-blue-500 hover:bg-blue-600 text-white rounded-md px-4 py-2"
+          onClick={handleCommentSubmit}
+          disabled={mutationLoading}
+        >
+          {mutationLoading ? "Posting..." : "Post Comment"}
         </button>
+        {mutationError && (
+          <p className="text-red-500 mt-2">Error posting comment.</p>
+        )}
       </div>
     </div>
   );

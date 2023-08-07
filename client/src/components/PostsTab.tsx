@@ -55,6 +55,8 @@ function PostsTab() {
   if (error) return <p>Error: {error.message}</p>;
 
   const totalPages = Math.ceil(data.getAllPosts.totalCount / itemsPerPage);
+  // Useful for post creation scenarios where a user ID is mandatory.
+  const sampleUserId = data.getAllPosts.items[0].author.id;
 
   const handleCreate = () => {
     setIsModalOpen(true);
@@ -81,9 +83,9 @@ function PostsTab() {
         <Modal
           type="POST"
           operation={"CREATE"}
-          defaultData={null}
+          defaultData={{ authorId: sampleUserId }}
           onClose={() => setIsModalOpen(false)}
-          refetch={refetch}
+          refetch={() => refetch()}
         />
       )}
 
