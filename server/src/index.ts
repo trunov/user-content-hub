@@ -19,7 +19,6 @@ export const setupServer = async () => {
   const httpServer = http.createServer(app);
 
   const connection = await AppDataSource.initialize();
-  await connection.runMigrations();
 
   const server = new ApolloServer({
     typeDefs: [UserType, PostType, CommentType],
@@ -40,7 +39,8 @@ export const setupServer = async () => {
 };
 
 export const startServer = async () => {
-  const { httpServer } = await setupServer();
+  const { httpServer, connection } = await setupServer();
+  await connection.runMigrations();
 
   await new Promise<void>((resolve) =>
     httpServer.listen({ port: port }, resolve)
