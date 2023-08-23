@@ -18,11 +18,15 @@ describe("Comment Resolvers - Unit Tests", () => {
     mockManager.findOne.mockResolvedValue(null);
 
     await expect(
-      CommentResolvers.Mutation.addComment(null, {
-        postId: 1,
-        content: "Test Comment",
-        authorId: 2,
-      })
+      CommentResolvers.Mutation.addComment(
+        null,
+        {
+          postId: 1,
+          content: "Test Comment",
+          authorId: 2,
+        },
+        { manager: mockManager }
+      )
     ).rejects.toThrow("Post not found");
   });
 
@@ -40,11 +44,15 @@ describe("Comment Resolvers - Unit Tests", () => {
     mockManager.create.mockReturnValue(mockCommentData);
     mockManager.save.mockResolvedValue({ ...mockCommentData, id: 100 });
 
-    const result = await CommentResolvers.Mutation.addComment(null, {
-      postId: 1,
-      content: "Test Comment",
-      authorId: 2,
-    });
+    const result = await CommentResolvers.Mutation.addComment(
+      null,
+      {
+        postId: 1,
+        content: "Test Comment",
+        authorId: 2,
+      },
+      { manager: mockManager }
+    );
 
     expect(result).toEqual({
       ...mockCommentData,

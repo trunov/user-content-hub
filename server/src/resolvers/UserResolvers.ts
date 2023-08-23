@@ -1,19 +1,15 @@
-import { AppDataSource } from "../data-source";
 import { Comment } from "../entity/Comment";
 import { Post } from "../entity/Post";
 import { User } from "../entity/User";
 
 export const UserResolvers = {
   Query: {
-    getAllUsers: async () => {
-      const manager = AppDataSource.createEntityManager();
+    getAllUsers: async (_parent, _args: any, { manager }) => {
       return await manager.find(User);
     },
   },
   Mutation: {
-    createUser: async (_, { name, email }) => {
-      const manager = AppDataSource.createEntityManager();
-
+    createUser: async (_, { name, email }, { manager }) => {
       const existingUser = await manager.findOne(User, {
         where: { email: email },
       });
@@ -24,9 +20,7 @@ export const UserResolvers = {
       const user = manager.create(User, { name, email });
       return await manager.save(user);
     },
-    updateUser: async (_, { id, name, email }) => {
-      const manager = AppDataSource.createEntityManager();
-
+    updateUser: async (_, { id, name, email }, { manager }) => {
       const existingUser = await manager.findOne(User, {
         where: { email: email },
       });
@@ -41,9 +35,7 @@ export const UserResolvers = {
         where: { id: id },
       });
     },
-    deleteUser: async (_, { id }) => {
-      const manager = AppDataSource.createEntityManager();
-
+    deleteUser: async (_, { id }, { manager }) => {
       const user = await manager.findOne(User, {
         where: { id: id },
         relations: ["comments", "posts"],

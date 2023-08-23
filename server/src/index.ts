@@ -32,7 +32,12 @@ export const setupServer = async () => {
     "/graphql",
     cors<cors.CorsRequest>(),
     json(),
-    expressMiddleware(server)
+    expressMiddleware(server, {
+      context: async () => {
+        const manager = AppDataSource.createEntityManager();
+        return { manager };
+      },
+    })
   );
 
   return { httpServer, connection };

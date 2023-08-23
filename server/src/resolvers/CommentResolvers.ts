@@ -1,12 +1,9 @@
-import { AppDataSource } from "../data-source";
 import { Comment } from "../entity/Comment";
 import { Post } from "../entity/Post";
 
 export const CommentResolvers = {
   Mutation: {
-    addComment: async (_, { postId, content, authorId }) => {
-      const manager = AppDataSource.createEntityManager();
-
+    addComment: async (_, { postId, content, authorId }, { manager }) => {
       const post = await manager.findOne(Post, {
         where: { id: postId },
       });

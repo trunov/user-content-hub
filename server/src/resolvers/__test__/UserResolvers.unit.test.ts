@@ -26,7 +26,9 @@ describe("User Resolvers - Unit Tests", () => {
 
     mockManager.find.mockResolvedValue(mockUsers);
 
-    const result = await UserResolvers.Query.getAllUsers();
+    const result = await UserResolvers.Query.getAllUsers(null, null, {
+      manager: mockManager,
+    });
 
     expect(result).toEqual(mockUsers);
   });
@@ -38,10 +40,14 @@ describe("User Resolvers - Unit Tests", () => {
       email: "john@random.com",
     });
 
-    const result = await UserResolvers.Mutation.createUser(null, {
-      name: "John",
-      email: "john@random.com",
-    });
+    const result = await UserResolvers.Mutation.createUser(
+      null,
+      {
+        name: "John",
+        email: "john@random.com",
+      },
+      { manager: mockManager }
+    );
 
     expect(result.name).toBe("John");
     expect(result.email).toBe("john@random.com");
@@ -55,11 +61,15 @@ describe("User Resolvers - Unit Tests", () => {
     });
 
     await expect(
-      UserResolvers.Mutation.updateUser(null, {
-        id: 1,
-        name: "John",
-        email: "jane@random.com",
-      })
+      UserResolvers.Mutation.updateUser(
+        null,
+        {
+          id: 1,
+          name: "John",
+          email: "jane@random.com",
+        },
+        { manager: mockManager }
+      )
     ).rejects.toThrow("A user with this email already exists");
   });
 
@@ -70,11 +80,15 @@ describe("User Resolvers - Unit Tests", () => {
       email: "john.doe@random.com",
     });
 
-    const result = await UserResolvers.Mutation.updateUser(null, {
-      id: 1,
-      name: "John Doe",
-      email: "john.doe@random.com",
-    });
+    const result = await UserResolvers.Mutation.updateUser(
+      null,
+      {
+        id: 1,
+        name: "John Doe",
+        email: "john.doe@random.com",
+      },
+      { manager: mockManager }
+    );
 
     expect(result.name).toBe("John Doe");
     expect(result.email).toBe("john.doe@random.com");
@@ -84,9 +98,13 @@ describe("User Resolvers - Unit Tests", () => {
     mockManager.findOne.mockResolvedValue(undefined);
 
     await expect(
-      UserResolvers.Mutation.deleteUser(null, {
-        id: 1,
-      })
+      UserResolvers.Mutation.deleteUser(
+        null,
+        {
+          id: 1,
+        },
+        { manager: mockManager }
+      )
     ).rejects.toThrow("User not found");
   });
 
@@ -97,9 +115,13 @@ describe("User Resolvers - Unit Tests", () => {
       email: "john@random.com",
     });
 
-    const result = await UserResolvers.Mutation.deleteUser(null, {
-      id: 1,
-    });
+    const result = await UserResolvers.Mutation.deleteUser(
+      null,
+      {
+        id: 1,
+      },
+      { manager: mockManager }
+    );
 
     expect(result).toBe(true);
   });
@@ -114,9 +136,13 @@ describe("User Resolvers - Unit Tests", () => {
     });
     mockManager.delete.mockResolvedValue(true);
 
-    const result = await UserResolvers.Mutation.deleteUser(null, {
-      id: 1,
-    });
+    const result = await UserResolvers.Mutation.deleteUser(
+      null,
+      {
+        id: 1,
+      },
+      { manager: mockManager }
+    );
 
     expect(result).toBe(true);
   });
@@ -128,10 +154,14 @@ describe("User Resolvers - Unit Tests", () => {
     });
 
     await expect(
-      UserResolvers.Mutation.createUser(null, {
-        name: "John",
-        email: "john@random.com",
-      })
+      UserResolvers.Mutation.createUser(
+        null,
+        {
+          name: "John",
+          email: "john@random.com",
+        },
+        { manager: mockManager }
+      )
     ).rejects.toThrow("A user with this email already exists");
   });
 });

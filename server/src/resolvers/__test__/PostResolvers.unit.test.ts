@@ -27,7 +27,9 @@ describe("Post Resolvers - Unit Tests", () => {
     mockManager.create.mockReturnValue(mockPostData);
     mockManager.save.mockResolvedValue(mockPostData);
 
-    const result = await PostResolvers.Mutation.createPost(null, mockPostData);
+    const result = await PostResolvers.Mutation.createPost(null, mockPostData, {
+      manager: mockManager,
+    });
 
     expect(mockManager.create).toHaveBeenCalledWith(
       expect.anything(),
@@ -45,10 +47,14 @@ describe("Post Resolvers - Unit Tests", () => {
     ];
     mockManager.findAndCount.mockResolvedValue([mockPosts, mockPosts.length]);
 
-    const { items, totalCount } = await PostResolvers.Query.getAllPosts(null, {
-      offset: 0,
-      limit: 10,
-    });
+    const { items, totalCount } = await PostResolvers.Query.getAllPosts(
+      null,
+      {
+        offset: 0,
+        limit: 10,
+      },
+      { manager: mockManager }
+    );
 
     expect(mockManager.findAndCount).toHaveBeenCalledWith(expect.anything(), {
       skip: 0,
@@ -67,11 +73,14 @@ describe("Post Resolvers - Unit Tests", () => {
     };
     mockManager.findOne.mockResolvedValue(mockPost);
 
-    const result = await PostResolvers.Query.getPostById(null, { postId: 1 });
+    const result = await PostResolvers.Query.getPostById(
+      null,
+      { postId: 1 },
+      { manager: mockManager }
+    );
 
     expect(mockManager.findOne).toHaveBeenCalledWith(expect.anything(), {
       where: { id: 1 },
-      relations: ["comments", "comments.author"],
     });
     expect(result).toEqual(mockPost);
   });
@@ -85,7 +94,9 @@ describe("Post Resolvers - Unit Tests", () => {
     mockManager.update.mockResolvedValue({});
     mockManager.findOne.mockResolvedValue(mockPost);
 
-    const result = await PostResolvers.Mutation.updatePost(null, mockPost);
+    const result = await PostResolvers.Mutation.updatePost(null, mockPost, {
+      manager: mockManager,
+    });
 
     expect(mockManager.update).toHaveBeenCalledWith(expect.anything(), 1, {
       title: "Post 1",
@@ -93,7 +104,6 @@ describe("Post Resolvers - Unit Tests", () => {
     });
     expect(mockManager.findOne).toHaveBeenCalledWith(expect.anything(), {
       where: { id: 1 },
-      relations: ["comments", "comments.author"],
     });
     expect(result).toEqual(mockPost);
   });
@@ -108,7 +118,11 @@ describe("Post Resolvers - Unit Tests", () => {
     mockManager.findOne.mockResolvedValue(mockPost);
     mockManager.remove.mockResolvedValue(true);
 
-    const result = await PostResolvers.Mutation.deletePost(null, { id: 1 });
+    const result = await PostResolvers.Mutation.deletePost(
+      null,
+      { id: 1 },
+      { manager: mockManager }
+    );
 
     expect(mockManager.findOne).toHaveBeenCalledWith(expect.anything(), {
       where: { id: 1 },
