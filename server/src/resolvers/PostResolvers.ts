@@ -1,7 +1,5 @@
 import { Comment } from "../entity/Comment";
 import { Post } from "../entity/Post";
-import { User } from "../entity/User";
-import { commentLoader } from "../loaders/commentLoader";
 import { userLoader } from "../loaders/userLoader";
 
 export const PostResolvers = {
